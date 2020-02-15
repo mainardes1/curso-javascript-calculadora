@@ -28,6 +28,12 @@ class CalcController{
             }, 10000);*/
         }
 
+        initButtonsEvents(){
+
+           let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+        }
+
         setDisplayDateTime(){
 
             this.displayDate = this.currentDate.toLocaleDateString(this.locale); //, day='2-digit', month='short', year='numeric' p/ data extensa); // tudo o que for repetido criar método;
