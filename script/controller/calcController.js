@@ -42,33 +42,6 @@ class CalcController{
 
         }
 
-        clearAll(){
-
-            this._operation = [];
-
-        }
-
-        clearEntry(){
-
-            this._operation.pop(); // clearEntry serve para apagar a última entrada digitada na calculadora, e a função pop() remove o último item do array.
-
-        }
-
-        getLastOperation(){
-
-            return this._operation[this._operation.length -1];
-
-        }
-
-        addOperation(value){
-
-            this._operation.push(value); // insere a última operação digitada no array.
-        }
-
-        setError(){
-            this.displayCalc = "Error"; // caso alguma entrada seja diferente das esperadas seta mensagem de erro no visor da calculadora.
-        }
-
         execBtn(value){
 
             switch (value){
@@ -80,24 +53,29 @@ class CalcController{
                     this.cancelEntry();
                     break;
                 case 'soma':
-    
+                    this.addOperation('+');
                     break;
                 case 'subtracao':
-
+                    this.addOperation('-');
                     break;
                 case 'multiplicacao':
-
+                    this.addOperation('*');
                     break;                    
                 case 'divisao':
-
+                    this.addOperation('/');
                     break;
                 case 'porcento':
-
+                    this.addOperation('%');
                     break;
                 case 'igual':
 
                     break;
 
+                case 'ponto':
+                    this.addOperation('.');
+                    break;
+                
+                case '0':
                 case '1':
                 case '2':
                 case '3':
@@ -120,33 +98,91 @@ class CalcController{
 
         initButtonsEvents(){
 
-           let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // o html tem duas classes importantes os botões e os textos #buttons> g pega cada propriedade 'g' de buttons
+            let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // o html tem duas classes importantes os botões e os textos #buttons> g pega cada propriedade 'g' de buttons
+ 
+            buttons.forEach((btn, index)=>{
+ 
+                 this.addEventListenerAll(btn, "click drag", e =>{
+ 
+                     //console.log(btn.className.baseVal.replace("btn-", ""));
+                     let textBtn = btn.className.baseVal.replace("btn-", "");
+ 
+                     this.execBtn(textBtn);
+ 
+                 });
+ 
+                 this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>{
+ 
+                     btn.style.cursor = "pointer";
+ 
+                 });
+ 
+             });
+         }
 
-           buttons.forEach((btn, index)=>{
+        clearAll(){
 
-                this.addEventListenerAll(btn, "click drag", e =>{
+            this._operation = []; // reseta o array de operações ou seja zera tudo.
 
-                    //console.log(btn.className.baseVal.replace("btn-", ""));
-                    let textBtn = btn.className.baseVal.replace("btn-", "");
-
-                    this.execBtn();
-
-                });
-
-                this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>{
-
-                    btn.style.cursor = "pointer";
-
-                });
-
-            });
         }
 
+        clearEntry(){
 
+            this._operation.pop(); // clearEntry serve para apagar a última entrada digitada na calculadora, e a função pop() remove o último item do array.
 
+        }
 
+        getLastOperation(){
 
+            return this._operation[this._operation.length -1];
 
+        }
+
+        setLastOperation(value){
+
+            this._operation[this._operation.length -1] = value;
+
+        }
+
+        isOperator(value){
+
+            return (['+', '-', '*', '/', '%'].indexOf(value) > -1);
+
+        }
+
+        addOperation(value){
+
+            if (isNaN(this.getLastOperation())){
+                
+                if(this.isOperator(value)){
+
+                    this.setLastOperation(value);
+
+                } else if(isNaN(value)){
+                    
+                    
+
+                } else{
+
+                    this._operation.push(value);
+
+                }
+
+            } else {
+                
+                let newValue = this.getLastOperation().toString() + value.toString(); 
+
+                this.setLastOperation(parseInt(newValue));
+            }
+
+            console.log(this._operation);
+        }
+
+        setError(){
+            this.displayCalc = "Error"; // caso alguma entrada seja diferente das esperadas seta mensagem de erro no visor da calculadora.
+        }
+
+        
         setDisplayDateTime(){
             // seta a data para a localidade do usuário
             this.displayDate = this.currentDate.toLocaleDateString(this.locale); //, day='2-digit', month='short', year='numeric' p/ data extensa); // tudo o que for repetido criar método;
