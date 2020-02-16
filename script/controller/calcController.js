@@ -18,7 +18,7 @@ class CalcController{
 
             this.setDisplayDateTime(); // para executar imediatamente ao abrir a calculadora
 
-            setInterval(()=>{
+            setInterval(()=>{ // para mostrar a contagem de segundos e ir atualizando;
 
                 this.setDisplayDateTime();
 
@@ -31,9 +31,9 @@ class CalcController{
             }, 10000);*/
         }
 
-        addEventListenerAll(element, events, fn){
+        addEventListenerAll(element, events, fn){ // para adicionar os eventos de mouse nos botões
 
-            events.split(' ').forEach(event => {
+            events.split(' ').forEach(event => { // para separar os eventos quando encontrar espaço pois o JS só adiciona um evento por vez.
 
                 element.addEventListener(event, fn, false);
             
@@ -50,17 +50,23 @@ class CalcController{
 
         clearEntry(){
 
-            this._operation.pop();
+            this._operation.pop(); // clearEntry serve para apagar a última entrada digitada na calculadora, e a função pop() remove o último item do array.
+
+        }
+
+        getLastOperation(){
+
+            return this._operation[this._operation.length -1];
 
         }
 
         addOperation(value){
 
-            this._operation.push(value);
+            this._operation.push(value); // insere a última operação digitada no array.
         }
 
         setError(){
-            this.displayCalc = "Error";
+            this.displayCalc = "Error"; // caso alguma entrada seja diferente das esperadas seta mensagem de erro no visor da calculadora.
         }
 
         execBtn(value){
@@ -114,7 +120,7 @@ class CalcController{
 
         initButtonsEvents(){
 
-           let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+           let buttons = document.querySelectorAll("#buttons > g, #parts > g"); // o html tem duas classes importantes os botões e os textos #buttons> g pega cada propriedade 'g' de buttons
 
            buttons.forEach((btn, index)=>{
 
@@ -142,7 +148,7 @@ class CalcController{
 
 
         setDisplayDateTime(){
-
+            // seta a data para a localidade do usuário
             this.displayDate = this.currentDate.toLocaleDateString(this.locale); //, day='2-digit', month='short', year='numeric' p/ data extensa); // tudo o que for repetido criar método;
             this.displayTime = this.currentDate.toLocaleTimeString(this.locale);
 
@@ -156,7 +162,7 @@ class CalcController{
 
         set displayTime(value){
 
-            return this._timeEL.innerHTML = value;
+            return this._timeEL.innerHTML = value; //innerHTML altera o que está escrito no html sendo assim alterando a hora escrita no visor da calculadora.
 
         }
 
