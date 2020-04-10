@@ -24,6 +24,8 @@ class CalcController{
 
         }, 1000);
 
+        this.setLastNumberToDisplay();
+
         /*setTimeout(() =>{
 
             clearInterval(interval); //parar o interval com 5 segundos
@@ -45,11 +47,15 @@ class CalcController{
 
         this._operation = [];
 
+        this.setLastNumberToDisplay();
+
     }
 
     clearEntry(){
 
         this._operation.pop();
+
+        this.setLastNumberToDisplay();
 
     }
 
@@ -85,18 +91,33 @@ class CalcController{
 
     calc(){
 
-        let last = this._operation.pop();
+        let last = '';
 
+        if(this._operation.length > 3){
+           let last = this._operation.pop();
+        }
         let result = eval(this._operation.join(""));
 
-        this._operation = [result, last];
+        if (last == '%'){
+
+            result /= 100;
+            this._operation=[result];
+
+        }else{
+
+            this._operation = [result];
+
+            if (last) this._operation.push(last);
+
+        }
+
         this.setLastNumberToDisplay();
 
     }
 
     setLastNumberToDisplay(){
 
-        let lastNumber = 0;
+        let lastNumber;
 
         for(let i = this._operation.length-1; i>=0; i--){
 
@@ -109,6 +130,8 @@ class CalcController{
             }
 
         }
+
+        if(!lastNumber) lastNumber = 0;
 
         this.displayCalc = lastNumber;
 
@@ -128,32 +151,29 @@ class CalcController{
             } else {
                 
                 this.pushOperation(value);
+                this.setLastNumberToDisplay();
 
             }
         }else{
             //numero
             if(this.isOperator(value)){
-
+                
                 //this._operation.push(value);
                 this.pushOperation(value);
-
-                this.setLastNumberToDisplay();
 
             }else{
 
                 let newValue = this.getLastOperation().toString() + value.toString();
                 this.setLastOperation(parseInt(newValue));
-
-                //atualizar o display
                 this.setLastNumberToDisplay();
+                //atualizar o display
+                
 
             }
 
         }
-
         
         console.log(this._operation);
-        
 
     }
 
@@ -162,8 +182,6 @@ class CalcController{
         this.displayCalc = "Error";
     }
     
-  
-
     execBtn(value){
 
         switch (value){
@@ -174,7 +192,7 @@ class CalcController{
 
             case 'ce':
 
-                this.cancelEntry();
+                this.clearEntry();
 
             break;
 
@@ -199,7 +217,7 @@ class CalcController{
             break;
 
             case 'igual':
-
+                this.calc();
             break;
 
             case 'ponto':
